@@ -65,12 +65,12 @@ export class UsersService {
   }
 
   paginate(options: IPaginationOptions): Observable<Pagination<User>> {
-    return paginate<User>(this.userRepository, options).pipe(
-      map((usersPageable: Pagination<User[]>) => {
-        usersPageable.forEach(function (v) {
+    return from(paginate<User>(this.userRepository, options)).pipe(
+      map((usersPageable: Pagination<User>) => {
+        usersPageable.items.forEach(function (v) {
           delete v.password;
         });
-        return;
+        return usersPageable;
       }),
     );
   }

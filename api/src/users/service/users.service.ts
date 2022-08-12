@@ -6,7 +6,7 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../models/user.entity';
-import { User } from '../models/user.interface';
+import { User, UserRole } from '../models/user.interface';
 import {
   paginate,
   Pagination,
@@ -31,7 +31,7 @@ export class UsersService {
         newUser.username = createUserDto.username;
         newUser.email = createUserDto.email;
         newUser.password = passwordHash;
-        newUser.role = createUserDto.role;
+        newUser.role = UserRole.USER;
         return from(this.userRepository.save(newUser)).pipe(
           map((user: User) => {
             const { password, ...result } = user;
@@ -82,6 +82,7 @@ export class UsersService {
   updateOne(id: string, User: CreateUserDto): Observable<any> {
     delete User.email;
     delete User.password;
+    delete User.role;
     return from(this.userRepository.update(id, User));
   }
 

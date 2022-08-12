@@ -1,31 +1,28 @@
-import { BeforeInsert, Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from "typeorm";
-import { UserRole } from "./user.interface";
+import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { UserRole } from './user.interface';
 
-@Entity() 
+@Entity()
 export class UserEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
-    @PrimaryGeneratedColumn('uuid')
-    id: string
+  @Column()
+  name: string;
 
-    @Column()
-    name: string
+  @Column({ unique: true })
+  username: string;
 
-    @Column({unique: true})
-    username: string
+  @Column()
+  email: string;
 
-    @Column()
-    email: string
+  @Column()
+  password: string;
 
-    @Column()
-    password: string
+  @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
+  role: UserRole;
 
-    @Column({type: 'enum', enum: UserRole, default: UserRole.USER})
-    role: UserRole
-
-    @BeforeInsert()
-    emailToLowerCase() {
-        this.email = this.email.toLowerCase();
-    }
-
-
+  @BeforeInsert()
+  emailToLowerCase() {
+    this.email = this.email.toLowerCase();
+  }
 }

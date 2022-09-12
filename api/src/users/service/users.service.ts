@@ -6,7 +6,12 @@ import { Repository } from 'typeorm';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { UpdateUserDto } from '../dto/update-user.dto';
 import { UserEntity } from '../models/user.entity';
-import { User } from '../models/user.interface';
+import { User, UserRole } from '../models/user.interface';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class UsersService {
@@ -26,7 +31,7 @@ export class UsersService {
         newUser.username = createUserDto.username;
         newUser.email = createUserDto.email;
         newUser.password = passwordHash;
-        newUser.role = createUserDto.role;
+        newUser.role = UserRole.USER;
         return from(this.userRepository.save(newUser)).pipe(
           map((user: User) => {
             const { password, ...result } = user;
@@ -59,6 +64,17 @@ export class UsersService {
     );
   }
 
+  paginate(options: IPaginationOptions): Observable<Pagination<User>> {
+    return from(paginate<User>(this.userRepository, options)).pipe(
+      map((usersPageable: Pagination<User>) => {
+        usersPageable.items.forEach(function (v) {
+          delete v.password;
+        });
+        return usersPageable;
+      }),
+    );
+  }
+
   update(id: string, updateUserDto: UpdateUserDto): Observable<any> {
     return from(this.userRepository.update(id, updateUserDto));
   }
@@ -66,6 +82,7 @@ export class UsersService {
   updateOne(id: string, User: CreateUserDto): Observable<any> {
     delete User.email;
     delete User.password;
+    delete User.role;
     return from(this.userRepository.update(id, User));
   }
 
@@ -76,13 +93,15 @@ export class UsersService {
   login(user: User): Observable<string> {
     return from(this.validateUser(user.email, user.password)).pipe(
       switchMap((user: User) => {
-        if(user) {
-          return this.authService.createJWT(user).pipe(map((jwt: string) => (jwt)));
+        if (user) {
+          return this.authService
+            .createJWT(user)
+            .pipe(map((jwt: string) => jwt));
         } else {
           return 'Wrong Credentials';
         }
-      })
-    )
+      }),
+    );
   }
 
   validateUser(email: string, password: string): Observable<User> {
@@ -107,6 +126,6 @@ export class UsersService {
   }
 
   updateRoleOfUser(id: string, user: User): Observable<any> {
-    return from(this.userRepository.update(id, user))
+    return from(this.userRepository.update(id, user));
   }
 }

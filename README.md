@@ -1,6 +1,6 @@
 ### Things to Achieve
 
-:white_large_square Project Setup
+- [x] Project Setup
 - [x] Crud API and Typeorm with Observables
 - [x] JWT Authentication and Password hashing
 - [x] JWT and Role based API protection.
@@ -18,4 +18,13 @@
 - [ ] Angular: Simple Auth Guard and JWT interceptor
 - [ ] Angular: Simple Update UserProfile with Reactive Forms
 - [ ] NestJS: Blog.module & TypeORM entity & @ManyToOne relation
-- [ ] 
+- [ ] NestJS: BlogAPI: findOne, findAll, create... & relation ManyToOne
+- [ ] NestJS: BlogAPI: UpdateOne, DeleteOne and UserIsAuthor Guard
+- [ ] Angular: Upload Profile Image with Progress Bar
+- [ ] NestJS: Pagination - IndexAll and IndexByUser (Blog Entries)
+- [ ] Angular: Display all Blog Entries with Material Card and Pagination
+- [ ] Angular: Create Blog Entry with body as markdown and upload image
+- [ ] Angular: Component to display single Blog Entry (w. async pipe)
+- [ ] Angular: Display All BlogEntries by User and Pagination 
+- [ ] NestJS and Angular: Deploy to AWS Elastic Beanstalk
+- [ ] Docker
